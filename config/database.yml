@@ -86,9 +86,10 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: my_app_5_production
-    username: my_app_5
-    password: <%= ENV["MY_APP_5_DATABASE_PASSWORD"] %>
+    database: mangosteen_production
+    username: mangosteen
+    password: <%= ENV["DB_PASSWORD"] %>
+    host: <%= ENV["DB_HOST"] %>
   cache:
     <<: *primary_production
     database: my_app_5_production_cache

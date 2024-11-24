@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new email: "frank@example.com"
+    user = User.new name: "frank", email: "frank@example.com"
     if user.save
        render json: user
     else

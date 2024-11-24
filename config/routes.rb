@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "users/show"
-  get "users/create"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -11,4 +9,9 @@ Rails.application.routes.draw do
   root "posts#index"
   get "/users/:id", to: "users#show"
   post "/users/", to: "users#create"
+
+  # 添加messages资源路由
+  resources :messages do
+    resources :comments # 嵌套路由，让评论从属于留言
+  end
 end

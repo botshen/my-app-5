@@ -7,3 +7,7 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# 添加默认用户
+User.find_or_create_by(name: '张三')
+User.find_or_create_by(name: '李四')

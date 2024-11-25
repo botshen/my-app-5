@@ -2,16 +2,28 @@ class MessagesController < ApplicationController
    before_action :set_message, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @messages = Message.includes(:user, :comments)
+    @messages = Message.includes(:user, comments: :user)
                     .order(created_at: :desc)
                     .map do |message|
       {
         id: message.id,
+        author: {
+          name: message.user.name,
+          avatar: ""
+        },
         content: message.content,
-        user_name: message.user.name,
-        comments: message.comments.map { |comment| { id: comment.id, content: comment.content, user_name: comment.user.name, created_at: comment.created_at, updated_at: comment.updated_at } },
-        created_at: message.created_at,
-        updated_at: message.updated_at
+        createdAt: message.created_at.to_i * 1000,
+        comments: message.comments.order(created_at: :desc).map { |comment|
+          {
+            id: comment.id,
+            author: {
+              name: comment.user.name,
+              avatar: ""
+            },
+            content: comment.content,
+            createdAt: comment.created_at.to_i * 1000
+          }
+        }
       }
     end
 
@@ -22,18 +34,23 @@ class MessagesController < ApplicationController
     render json: {
       message: {
         id: @message.id,
+        author: {
+          name: @message.user.name,
+          avatar: @message.user.avatar_url
+        },
         content: @message.content,
-        user_name: @message.user.name,
+        createdAt: @message.created_at.to_i * 1000,
         comments: @message.comments.includes(:user).order(created_at: :desc).map { |comment|
           {
             id: comment.id,
+            author: {
+              name: comment.user.name,
+              avatar: comment.user.avatar_url
+            },
             content: comment.content,
-            user_name: comment.user.name,
-            created_at: comment.created_at
+            createdAt: comment.created_at.to_i * 1000
           }
-        },
-        created_at: @message.created_at,
-        updated_at: @message.updated_at
+        }
       }
     }
   end

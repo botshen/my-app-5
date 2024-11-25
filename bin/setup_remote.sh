@@ -63,7 +63,20 @@ echo
 echo "是否要更新数据库？[y/N]"
 read ans
 case $ans in
-    y|Y|1  )  echo "yes"; title '更新数据库'; docker exec $container_name bin/rails db:create db:migrate ;;
+    y|Y|1  )  
+        echo "yes"
+        title '更新数据库'
+        docker exec $container_name bin/rails db:create db:migrate
+        
+        echo
+        echo "是否要执行 seed？[y/N]"
+        read seed_ans
+        case $seed_ans in
+            y|Y|1  )  echo "yes"; title '执行 seed'; docker exec $container_name bin/rails db:seed ;;
+            n|N|2  )  echo "no" ;;
+            ""     )  echo "no" ;;
+        esac
+        ;;
     n|N|2  )  echo "no" ;;
     ""     )  echo "no" ;;
 esac

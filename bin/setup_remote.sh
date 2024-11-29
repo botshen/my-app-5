@@ -27,12 +27,21 @@ set_env DB_HOST
 set_env DB_PASSWORD
 set_env RAILS_MASTER_KEY
 
+title '确保 Docker 网络存在'
+if ! docker network ls | grep -q app-network; then
+  docker network create app-network
+  echo 'Docker 网络 app-network 创建成功'
+else
+  echo 'Docker 网络 app-network 已存在'
+fi
+
 title '创建数据库'
-if [ "$(docker ps -aq -f name=^${DB_HOST}$)" ]; then
+if [ "$(docker ps -aq -f name=^${db_container_name}$)" ]; then
   echo '已存在数据库'
 else
-  docker run -d --name $DB_HOST \
-            --network=network1 \
+  docker run -d --name $db_container_name \
+            --network=app-network \
+            -p 5432:5432 \
             -e POSTGRES_USER=mangosteen \
             -e POSTGRES_DB=mangosteen_production \
             -e POSTGRES_PASSWORD=$DB_PASSWORD \
@@ -40,6 +49,8 @@ else
             -v mangosteen-data:/var/lib/postgresql/data \
             postgres:14
   echo '创建成功'
+  echo '等待数据库启动...'
+  sleep 3  # 给数据库一些启动时间
 fi
 
 title 'docker build'
@@ -52,9 +63,9 @@ fi
 
 title 'docker run'
 docker run -d -p 3000:3000 \
-           --network=network1 \
+           --network=app-network \
            --name=$container_name \
-           -e DB_HOST=$DB_HOST \
+           -e DB_HOST=$db_container_name \
            -e DB_PASSWORD=$DB_PASSWORD \
            -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
            mangosteen:$version

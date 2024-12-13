@@ -150,7 +150,7 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)
-    nokogiri (1.16.7)
+    nokogiri (1.17.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     ostruct (0.6.1)
@@ -289,7 +289,7 @@ DEPENDENCIES
   brakeman
   debug
   kamal
-  nokogiri (~> 1.16.7)
+  nokogiri (~> 1.17.2)
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors

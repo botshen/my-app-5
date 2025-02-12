@@ -38,7 +38,7 @@ gem "rack-cors"
 # 为特定平台的 gems 添加平台支持
 platforms :ruby do
   gem "nokogiri", "~> 1.16.7", force_ruby_platform: true
-  gem "thruster", "~> 0.1.9", force_ruby_platform: true
+  gem "thruster", "~> 0.1.11", force_ruby_platform: true
 end
 
 group :development, :test do
